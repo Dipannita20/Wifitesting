@@ -1,0 +1,114 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title> Processing </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content [fullscreen]="true" class="ion-padding outer-content">
+  <ng-container *ngIf="!data?.network">
+    <h3>
+      <ion-icon name="warning" color="danger"></ion-icon>
+      This program not configured yet, please contact administrator
+    </h3>
+  </ng-container>
+  <ng-container *ngIf="data?.network">
+    <div class="progress__section" *ngIf="data?.network?.download">
+      <h4>Speed Test</h4>
+
+      <div class="progress__section__container">
+        <h3>
+          <ion-icon name="cloud-download-outline" color="primary"></ion-icon>
+          Download Speed
+        </h3>
+        <p>{{ (speed.downloadProgress >= 1)? "Complete" : "Started"}}</p>
+      </div>
+      <ion-card color="secondary">
+        <ion-card-header>
+          <ion-card-title> Mbps </ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <h1>{{(speedTestResult.downloadSpeed | number: '1.0-0') || 0}}</h1>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-progress-bar [value]="speed.downloadProgress"></ion-progress-bar>
+    </div>
+
+    <div class="progress__section" *ngIf="data?.network?.upload">
+      <div class="progress__section__container">
+        <h3>
+          <ion-icon name="cloud-upload-outline" color="warning"></ion-icon>
+          Upload Speed
+        </h3>
+        <p>
+          {{ (data?.network?.download && speed.downloadProgress < 1)? "Not
+          Started" : (speed.uploadProgress == 1)? "Complete" : "Started"}}
+        </p>
+      </div>
+      <ion-card color="warning">
+        <ion-card-header>
+          <ion-card-title> Mbps </ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <h1>{{ (speedTestResult.uploadSpeed | number: '1.0-0') || 0}}</h1>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-progress-bar [value]="speed.uploadProgress"></ion-progress-bar>
+    </div>
+
+    <div class="progress__section" *ngIf="data?.network?.firewall">
+      <div class="progress__section__container">
+        <h3>Firewall Checking</h3>
+        <p>
+          {{ (data?.network?.upload && speed.uploadProgress < 1)? "Not Started"
+          : (firewallProgress < 100)? "Started" : "Complete"}}
+        </p>
+      </div>
+      <ion-card color="light">
+        <ion-card-header>
+          <ion-card-title> Pass </ion-card-title>
+        </ion-card-header>
+
+        <ion-card-content>
+          <h1>{{firewallSuccessCount}} / {{this.firewallUrls.length}}</h1>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-progress-bar [value]="firewallProgress"></ion-progress-bar>
+      <ion-text *ngIf="speed.uploadProgress>=1"
+        >{{firewallStatus.url}}
+        <ion-icon
+          *ngIf="firewallStatus.status != 0"
+          [color]="firewallStatus.status == 200 ? 'success' : 'danger'"
+          [name]="firewallStatus.status == 200 ? 'checkmark' : 'close'"
+        ></ion-icon
+      ></ion-text>
+    </div>
+  </ng-container>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <div class="buttons ion-padding">
+      <ion-button color="secondary" fill="outline" (click)="previous()">
+        <ion-icon name="chevron-back-outline" slot="start"></ion-icon>
+        Back</ion-button
+      >
+      <ion-button
+        *ngIf="data?.network"
+        color="secondary"
+        (click)="rerun()"
+        [disabled]="!(speed.downloadProgress >= 1 && speed.uploadProgress >= 1 && firewallProgress >= 100)"
+        ><ion-icon name="refresh-circle-outline" slot="start"></ion-icon
+        >Rerun</ion-button
+      >
+      <ion-button
+        (click)="next()"
+        *ngIf="data?.network"
+        [disabled]="!(speed.downloadProgress >= 1 && speed.uploadProgress >= 1 && firewallProgress >= 100)"
+        ><ion-icon name="chevron-forward-outline" slot="end"></ion-icon
+        >Next</ion-button
+      >
+    </div>
+  </ion-toolbar>
+</ion-footer>

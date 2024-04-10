@@ -1,0 +1,158 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title> Result for {{selectedProgram }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content [fullscreen]="true" class="ion-padding outer-content">
+  <div class="result">
+    <div class="result__card">
+      <ion-card color="secondary" *ngIf="data?.network?.download">
+        <ion-card-content class="result__card__content">
+          <ion-label
+            ><ion-icon name="cloud-download" color="primary"></ion-icon>
+            Download
+          </ion-label>
+          <h1>{{speedTestResult?.downloadSpeed | number: '1.0-0'}}</h1>
+          <span>Mbps</span>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card color="warning" *ngIf="data?.network?.upload">
+        <ion-card-content class="result__card__content">
+          <ion-label
+            ><ion-icon name="cloud-upload" color="primary"></ion-icon> Upload
+          </ion-label>
+          <h1>{{speedTestResult?.uploadSpeed | number: '1.0-0'}}</h1>
+          <span>Mbps</span>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <div *ngIf="data?.network?.firewall">
+      <h4>Firewall</h4>
+      <ion-list>
+        <ion-item *ngFor="let item of firewallUrls">
+          <ion-icon
+            slot="start"
+            [color]="item.status == 200 ? 'success' : 'danger'"
+            [name]="item.status == 200 ? 'checkmark' : 'close'"
+          ></ion-icon>
+          <ion-label class="text-wrap">{{item.url}}</ion-label>
+        </ion-item>
+      </ion-list>
+    </div>
+  </div>
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <div class="ion-padding final-result">
+      <ion-text
+        ><ion-icon
+          [color]="isDownloadSpeedOkay && isUploadSpeedOkay && isFirewallTestOkay ? 'success' : 'danger'"
+          [name]="isDownloadSpeedOkay && isUploadSpeedOkay && isFirewallTestOkay ? 'checkmark-circle-outline': 'close-circle-outline'"
+          size="large"
+        ></ion-icon
+      ></ion-text>
+
+      <ion-text color="primary">
+        <h2 class="ion-no-margin ion-no-padding">
+          {{isDownloadSpeedOkay && isUploadSpeedOkay && isFirewallTestOkay?
+          "Program can be installed": "Program cannot be installed"}}
+        </h2>
+      </ion-text>
+
+      <div class="container">
+        <div *ngIf="data?.network?.download">
+          <ion-button
+            color="danger"
+            fill="outline"
+            disabled="true"
+            *ngIf="!isDownloadSpeedOkay"
+          >
+            <ion-icon slot="start" color="danger" name="warning"></ion-icon>
+
+            Download</ion-button
+          >
+
+          <ion-button
+            color="success"
+            fill="outline"
+            disabled="true"
+            *ngIf="isDownloadSpeedOkay"
+          >
+            <ion-icon
+              slot="start"
+              color="success"
+              name="checkmark-circle"
+            ></ion-icon>
+
+            Download</ion-button
+          >
+        </div>
+
+        <div *ngIf="data?.network?.upload">
+          <ion-button
+            color="danger"
+            fill="outline"
+            disabled="true"
+            *ngIf="!isUploadSpeedOkay"
+          >
+            <ion-icon slot="start" color="danger" name="warning"></ion-icon>
+            Upload</ion-button
+          >
+
+          <ion-button
+            color="success"
+            fill="outline"
+            disabled="true"
+            *ngIf="isUploadSpeedOkay"
+          >
+            <ion-icon
+              slot="start"
+              color="success"
+              name="checkmark-circle"
+            ></ion-icon>
+            Upload</ion-button
+          >
+        </div>
+
+        <div *ngIf="data?.network?.firewall">
+          <ion-button
+            *ngIf="!isFirewallTestOkay"
+            color="danger"
+            fill="outline"
+            disabled="true"
+          >
+            <ion-icon slot="start" color="danger" name="warning"></ion-icon>
+            Firewall</ion-button
+          >
+
+          <ion-button
+            *ngIf="isFirewallTestOkay"
+            color="success"
+            fill="outline"
+            disabled="true"
+          >
+            <ion-icon
+              slot="start"
+              color="success"
+              name="checkmark-circle"
+            ></ion-icon>
+            Firewall</ion-button
+          >
+        </div>
+      </div>
+    </div>
+
+    <div class="buttons ion-padding">
+      <ion-button color="secondary" (click)="previous()" fill="outline">
+        <ion-icon name="chevron-back-outline" slot="start"></ion-icon
+        >Back</ion-button
+      >
+      <ion-button (click)="goHome()">
+        <ion-icon name="home-outline" slot="start"></ion-icon>
+        Home</ion-button
+      >
+    </div>
+  </ion-toolbar>
+</ion-footer>

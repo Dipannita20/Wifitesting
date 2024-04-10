@@ -1,0 +1,7 @@
+{
+  "name": "wifi-testing",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title> Connection Status </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content [fullscreen]="true" class="ion-padding outer-content">
+  <ion-item lines="none">
+    <ion-text>Network:</ion-text>
+    <ion-item slot="end" lines="none">
+      <span class="text">{{networkStatus?.connectionType?.toUpperCase()}}</span>
+    </ion-item>
+  </ion-item>
+  <ion-item lines="none">
+    <ion-text>Status:</ion-text>
+    <ion-item slot="end" *ngIf="networkStatus?.connected" lines="none">
+      <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
+      <span class="text"> Connected</span>
+    </ion-item>
+    <ion-item slot="end" *ngIf="!networkStatus?.connected" lines="none">
+      <ion-icon name="close-circle" color="danger"></ion-icon>
+      <span class="text"> No Connection</span>
+    </ion-item>
+  </ion-item>
+
+  <br />
+  <ion-button
+    expand="block"
+    (click)="next()"
+    [disabled]="!networkStatus?.connected"
+    >Next <ion-icon name="chevron-forward-outline" slot="end"></ion-icon
+  ></ion-button>
+</ion-content>

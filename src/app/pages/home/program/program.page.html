@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title> Select Program </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content [fullscreen]="true" class="outer-content">
+  <ion-item lines="none">
+    <ion-list>
+      <ion-item
+        *ngFor="let option of programLst"
+        (click)="handleChange(option)"
+        [ngClass]="{ 'selected-item': option.key === program }"
+      >
+        {{ option.key }}
+        <ion-icon name="checkmark" *ngIf="option.key === program"></ion-icon>
+      </ion-item>
+    </ion-list>
+  </ion-item>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <div class="buttons ion-padding">
+      <ion-button color="secondary" fill="outline" (click)="previous()">
+        <ion-icon name="chevron-back-outline" slot="start"></ion-icon>
+        Back</ion-button
+      >
+    </div>
+  </ion-toolbar>
+</ion-footer>

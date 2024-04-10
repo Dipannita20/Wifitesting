@@ -1,0 +1,64 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title> Select a Dealer </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content [fullscreen]="true" class="outer-content">
+  <div class="spinner" *ngIf="!nearByRetailer">
+    <ion-spinner color="primary"></ion-spinner>
+  </div>
+  <ion-list *ngIf="nearByRetailer">
+    <ion-item
+      *ngIf="firebase.selectedTempDealer.dealer"
+      (click)="handleOptionClickForTempDealer()"
+      [ngClass]="{ 'selected-item': firebase.selectedTempDealer.selected}"
+    >
+      {{ firebase.selectedTempDealer.dealer }}
+      <ion-icon
+        name="checkmark"
+        *ngIf="firebase.selectedTempDealer.selected"
+      ></ion-icon
+    ></ion-item>
+
+    <ion-item
+      *ngFor="let option of nearByRetailer"
+      (click)="handleOptionClick(option)"
+      [ngClass]="{ 'selected-item': option.RetailerCode === firebase.selectedDealer?.RetailerCode}"
+    >
+      {{ option.Name }}
+      <span [hidden]="!latitude">&nbsp; | &nbsp;</span> {{
+      calculateDistance(option.Lat, option.Long, latitude, longitude) / 1609.344
+      | number: '1.2-2' }}miles
+      <ion-icon
+        name="checkmark"
+        *ngIf="option.RetailerCode === firebase.selectedDealer?.RetailerCode"
+      ></ion-icon>
+    </ion-item>
+  </ion-list>
+  <ion-fab
+    slot="fixed"
+    vertical="top"
+    horizontal="end"
+    [edge]="true"
+    (click)="openDealerModal()"
+  >
+    <ion-fab-button color="secondary">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <div class="ion-padding">
+      <ion-button
+        color="secondary"
+        fill="outline"
+        (click)="previous()"
+        slot="end"
+      >
+        <ion-icon name="chevron-back-outline"></ion-icon>
+        Back</ion-button
+      >
+    </div>
+  </ion-toolbar>
+</ion-footer>
